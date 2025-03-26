@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Avatar Group</title>
+        <!-- Import IBM Plex Sans font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@700&display=swap" rel="stylesheet">
+
+        <style>
+            /* --- General Page Style --- */
+            body {
+                background-color: #260A2F;
+                /* align-items: center; REMOVED - Flexbox on hero handles centering */
+                min-height: 100vh;
+                padding: 60px 20px;
+                /* Keeps padding around the whole page */
+                box-sizing: border-box;
+                font-family: 'IBM Plex Sans', sans-serif;
+                margin: 0;
+                color: #FFFFFF;
+                display: flex;
+                /* Make body a flex container */
+                flex-direction: column;
+                /* Stack children (hero, scrollable) vertically */
+            }
+
+            /* --- Hero Content Styling --- */
+            .hero-content {
+                font-size: 4rem;
+                /* Base size for desktop */
+                font-weight: bold;
+                line-height: 1.2;
+                letter-spacing: -0.02em;
+                text-align: left;
+                max-width: 1200px;
+                /* Optional: constrain max width on large screens */
+                width: 100%;
+                /* Take available width */
+                /* --- START Modifications for 50vh Height & Centering --- */
+                height: 50vh;
+                /* Set height to 50% of viewport height */
+                display: flex;
+                /* Enable Flexbox */
+                flex-direction: column;
+                /* Stack lines vertically */
+                justify-content: center;
+                /* Vertically center the lines within the 50vh */
+                margin-left: auto;
+                /* Horizontally center the block when max-width is hit */
+                margin-right: auto;
+                /* Horizontally center the block when max-width is hit */
+                flex-shrink: 0;
+                /* Prevent hero from shrinking if content below grows */
+                /* --- END Modifications --- */
+            }
+
+            /* --- Styles for lines within hero remain largely the same --- */
+            .hero-content .line-1 {
+                display: flex;
+                align-items: baseline;
+                flex-wrap: wrap;
+                /* Allow wrapping on smaller screens */
+                margin-bottom: 0.1em;
+            }
+
+            .hero-content .line-2,
+            .hero-content .line-3,
+            .hero-content .line-4 {
+                margin-bottom: 0.1em;
+                /* Allow wrapping for individual lines too if needed */
+                word-break: break-word;
+            }
+
+            .hero-content .inline-block {
+                display: inline-block;
+                vertical-align: middle;
+                /* Keeps vertical alignment */
+                margin: 0 0.2em;
+                /* Adjust spacing */
+                position: relative;
+                /* Ensure it doesn't cause excessive line height issues */
+                line-height: 1;
+            }
+
+            .hero-content .spark-svg {
+                display: inline-block;
+                vertical-align: baseline;
+                width: 0.8em;
+                /* Scales with font size */
+                height: 0.8em;
+                /* Scales with font size */
+                margin: 0 0.05em;
+                position: relative;
+                top: -0.05em;
+                /* Adjust vertical position relative to baseline */
+            }
+
+            .hero-content .text-orange {
+                color: #FF4F00;
+            }
+
+            /* --- Scrollable Content Styling --- */
+            .scrollable-content {
+                /* Allow this section to take remaining space and scroll if needed */
+                flex-grow: 1;
+                overflow-y: auto;
+                /* Add scroll if content exceeds available space */
+                max-width: 1200px;
+                /* Match hero max-width */
+                width: 100%;
+                /* Take available width */
+                margin-left: auto;
+                /* Center the content block */
+                margin-right: auto;
+                /* Center the content block */
+                padding-top: 2em;
+                /* Add some space above the scrollable text */
+            }
+
+            .scrollable-content p {
+                font-family: sans-serif;
+                font-weight: normal;
+                font-size: 1rem;
+                /* Use rem for better accessibility */
+                line-height: 1.7;
+                /* margin-top: 4em; REMOVED - Space handled by scrollable-content padding */
+                margin-bottom: 1.5em;
+                color: #fff;
+                /* Slightly softer white for paragraph text */
+            }
+
+            .scrollable-content h2 {
+                margin-top: 2em;
+                /* Space above heading */
+                margin-bottom: 1em;
+                /* Space below heading */
+            }
+
+
+            /* --- Avatar Group Styling --- */
+            /* ... (Existing avatar styles remain unchanged) ... */
+            :root {
+                /* Core Dimensions & Layout */
+                --avatar-size: 72px;
+                --avatar-overlap: 20px;
+                --visible-avatars: 3;
+                --container-padding: 0px;
+                /* Keep for consistency, though 0 */
+
+                /* Border & Background Settings */
+                --background-color-outer: #FF4F00;
+                --border-color-outer: #FFE0CC;
+                --border-width-outer: 4px;
+                --background-color-inner: #FF4F00;
+                /* Background for avatar item before image loads */
+                --avatar-stroke-color: #FF4F00;
+                /* Border around each avatar item */
+                --avatar-border-thickness: 6px;
+                /* Thickness of the border around each avatar */
+                --viewport-overlay-border-width: 6px;
+                /* Thickness of the inner viewport border */
+                --viewport-overlay-border-color: #FF4F00;
+                /* Color of the inner viewport border */
+
+                /* Concentric Border Radii - calculated to maintain curve */
+                --border-radius-outer: 20px;
+                --border-radius-viewport: max(0px, calc(var(--border-radius-outer) - var(--border-width-outer) - var(--container-padding)));
+                --border-radius-avatar-item: max(0px, var(--border-radius-viewport));
+                --border-radius-avatar-image: max(0px, calc(var(--border-radius-avatar-item) - var(--avatar-border-thickness)));
+
+                /* Derived Layout Calculations */
+                --avatar-slot-width: calc(var(--avatar-size) - var(--avatar-overlap));
+                --viewport-width: calc(var(--avatar-size) + (var(--visible-avatars) - 1) * var(--avatar-slot-width));
+
+                /* Plus Count Appearance */
+                --text-color-count: #FFFFFF;
+                --font-size-count: 26px;
+                --count-margin-left: 10px;
+            }
+
+            .avatar-group-container {
+                display: flex;
+                align-items: center;
+                padding: var(--container-padding);
+                background-color: var(--background-color-outer);
+                border-radius: var(--border-radius-outer);
+                border: var(--border-width-outer) solid var(--border-color-outer);
+                width: fit-content;
+                /* Adapts to viewport width + count */
+                cursor: default;
+                /* Default cursor, interaction is hover only */
+                box-sizing: border-box;
+                overflow: hidden;
+                /* Clips the outer border radius */
+                position: relative;
+            }
+
+            .avatar-viewport {
+                width: var(--viewport-width);
+                /* Calculated width based on visible avatars */
+                height: var(--avatar-size);
+                overflow: hidden;
+                /* Clips the avatars scrolling inside */
+                border-radius: var(--border-radius-viewport);
+                /* Inner border radius */
+                position: relative;
+                /* For pseudo-element positioning */
+                box-sizing: border-box;
+            }
+
+            .avatar-viewport::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border-radius: inherit;
+                /* Takes radius from .avatar-viewport */
+                border: var(--viewport-overlay-border-width) solid var(--viewport-overlay-border-color);
+                box-sizing: border-box;
+                /* Border included in element dimensions */
+                pointer-events: none;
+                /* Allows clicks/hovers to pass through */
+                z-index: 10;
+                /* Sits above avatar items but below count */
+            }
+
+            .avatar-scroller {
+                display: flex;
+                height: 100%;
+                will-change: transform;
+                /* Hint for performance */
+                box-sizing: border-box;
+                position: relative;
+                /* Needed for transform */
+                transform: translateX(0);
+                /* Initial position */
+            }
+
+            .avatar-scroller.snapping {
+                transition: transform 0.5s cubic-bezier(0.66, 0.8, 0.66, 1);
+            }
+
+            .avatar-item {
+                width: var(--avatar-size);
+                height: var(--avatar-size);
+                flex-shrink: 0;
+                /* Prevent avatars from shrinking */
+                margin-right: calc(-1 * var(--avatar-overlap));
+                border-radius: var(--border-radius-avatar-item);
+                overflow: hidden;
+                /* Clips the image inside */
+                background-color: var(--background-color-inner);
+                box-sizing: border-box;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: var(--avatar-border-thickness) solid var(--avatar-stroke-color);
+                position: relative;
+                opacity: 1;
+                transition: transform 0.5s;
+                /* Opacity transition handled separately */
+                pointer-events: auto;
+            }
+
+            .avatar-item.is-partially-hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .avatar-item img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center center;
+                border-radius: var(--border-radius-avatar-image);
+                overflow: hidden;
+            }
+
+            .avatar-plus-count {
+                color: var(--text-color-count);
+                font-size: var(--font-size-count);
+                font-weight: 700;
+                /* Match hero font weight */
+                margin-left: var(--count-margin-left);
+                margin-right: 16px;
+                /* Fixed spacing on the right */
+                white-space: nowrap;
+                pointer-events: none;
+                user-select: none;
+                box-sizing: border-box;
+                z-index: 50;
+            }
+
+            /* --- End Avatar Group Styling --- */
+
+            /* --- Responsive Adjustments --- */
+            @media (max-width: 768px) {
+                body {
+                    padding: 40px 15px;
+                    /* Reduce padding on smaller screens */
+                }
+
+                .hero-content {
+                    font-size: 2.5rem;
+                    /* Reduce font size significantly */
+                    height: auto;
+                    /* Let height be determined by content on smaller screens */
+                    min-height: 40vh;
+                    /* Ensure it still takes up significant space */
+                    padding: 2em 0;
+                    /* Add some vertical padding instead of fixed height */
+                }
+
+                .hero-content .inline-block {
+                    margin: 0.2em 0.15em;
+                    /* Adjust spacing around avatar/spark */
+                    /* Add vertical margin if it wraps to its own line */
+                    margin-bottom: 0.4em;
+                }
+
+                .scrollable-content {
+                    padding-top: 1.5em;
+                    /* Adjust space */
+                }
+
+                /* Adjust avatar size and count font on smaller screens if needed */
+                :root {
+                    /* Example: Optionally reduce avatar size on mobile */
+                    /* --avatar-size: 60px; */
+                    /* --avatar-overlap: 15px; */
+                    /* --font-size-count: 22px; */
+                }
+            }
+
+            @media (max-width: 480px) {
+                body {
+                    padding: 30px 10px;
+                    /* Further reduce padding */
+                }
+
+                .hero-content {
+                    font-size: 2rem;
+                    /* Further reduce font size */
+                    min-height: 35vh;
+                    padding: 1.5em 0;
+                }
+
+                /* Further adjustments if needed for very small screens */
+                :root {
+                    /* Example: Further reduce avatar size */
+                    --avatar-size: 56px;
+                    --avatar-overlap: 15px;
+                    --font-size-count: 20px;
+                    --border-radius-outer: 16px;
+                    /* Slightly smaller radius */
+                    --avatar-border-thickness: 4px;
+                    --viewport-overlay-border-width: 4px;
+                }
+
+                .avatar-plus-count {
+                    margin-right: 10px;
+                    /* Reduce right margin */
+                }
+
+                .scrollable-content {
+                    padding-top: 1em;
+                    /* Adjust space */
+                }
+
+                .scrollable-content p {
+                    font-size: 0.95rem;
+                    /* Slightly smaller text on very small screens */
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="hero-content">
+            <div class="line-1">
+                <span>Wir</span>
+                <div class="inline-block">
+                    <!-- Avatar Group Component -->
+                    <div class="avatar-group-container" id="interactiveAvatarGroup">
+                        <div class="avatar-viewport">
+                            <div class="avatar-scroller">
+                                <!-- Avatars dynamically added here -->
+                            </div>
+                        </div>
+                        <div class="avatar-plus-count" id="avatarCount">+25</div>
+                    </div>
+                    <!-- End Avatar Group Component -->
+                </div>
+                <span>verwandeln</span>
+            </div>
+            <div class="line-2">
+                <span>deine</span>
+                <svg class="spark-svg" viewBox="0 0 57 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M0.919922 26.8242C14.0381 23.4473 24.3672 13.1159 27.7441 0H30.0957C33.4727 13.1159 43.8018 23.4473 56.9199 26.8242V29.1758C43.8018 32.5527 33.4727 42.8841 30.0957 56H27.7441C24.3672 42.8796 14.0392 32.5527 0.919922 29.1758V26.8242Z"
+                          fill="#FF4F00" />
+                </svg>
+                <span class="text-orange">komplexen</span>
+            </div>
+            <div class="line-3">
+                <span class="text-orange">Herausforderungen</span> <span>in</span>
+            </div>
+            <div class="line-4">
+                <span>digitale Lösungen</span>
+            </div>
+        </div>
+
+        <div class="scrollable-content">
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum
+                elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.</p>
+            <p>Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec
+                fermentum. Pellentesque malesuada nulla a mi.</p>
+            <p>Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu. Aliquam erat
+                volutpat. Duis ac turpis. Integer rutrum ante eu lacus.</p>
+            <p>Ut cursus et vel nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris pretium lacus et magna. Fusce quis neque vel lectus ultricies suscipit. Sed feugiat. Fusce ut diam. Integer egestas,
+                orci quis laoreet dapibus, magna dolor pharetra magna, eu iaculis justo odio quis arcu.</p>
+            <p>Nam sed tellus id magna elementum tincidunt. Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Pellentesque scelerisque. Nunc sit amet velit. Integer imperdiet turpis nec elit.
+                Proin nec justo. Vivamus luctus, ipsum id venenatis consectetuer, velit augue luctus metus, ac sagittis neque orci sit amet odio.</p>
+            <p>Sed sagittis, leo et facilisis lobortis, sapien nibh tempor elit, non eleifend enim magna non nisl. Nullam eleifend placerat lacus. Quisque facilisis suscipit elit. Pellentesque habitant morbi tristique senectus et netus et malesuada
+                fames ac turpis egestas. Morbi lectus. Nulla facilisi.</p>
+            <p>Vestibulum et metus. Curabitur et felis. Praesent sagittis. Sed aliquet odio vitae tortor. Nunc tincidunt nisi vitae velit. Aliquam erat volutpat. Integer malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
+                per inceptos himenaeos.</p>
+
+        </div>
+
+        <script>
+            (function () { // IIFE for encapsulation
+                'use strict';
+
+                // --- Configuration & Settings ---
+                const SETTINGS = {
+                    containerId: 'interactiveAvatarGroup',
+                    viewportSelector: '.avatar-viewport',
+                    scrollerSelector: '.avatar-scroller',
+                    countSelector: '#avatarCount',
+                    avatarItemSelector: '.avatar-item',
+                    avatarUrls: [ // Example URLs
+                        'https://picsum.photos/id/1005/150/150', 'https://picsum.photos/id/1011/150/150', 'https://picsum.photos/id/1012/150/150',
+                        'https://picsum.photos/id/1027/150/150', 'https://picsum.photos/id/10/150/150', 'https://picsum.photos/id/20/150/150',
+                        'https://picsum.photos/id/30/150/150', 'https://picsum.photos/id/40/150/150',
+                        'https://picsum.photos/id/50/150/150', 'https://picsum.photos/id/60/150/150'
+                        // Add more URLs as needed
+                    ],
+                    staticCountText: "+25",      // Text for the count element when scrolling is active. Set to null or empty to hide count.
+                    scrollSpeedFactor: 0.15,     // Multiplier for hover scroll speed (~pixels per frame target) - ADJUST FOR FEEL
+                    easeInDurationMs: 1500,      // Duration of the ease-in effect when hover starts (milliseconds)
+                    minAvatarsForScroll: 4,      // Minimum total unique avatars needed to enable scrolling behavior
+                    // --- New Settings for Scroll Interaction ---
+                    scrollMultiplier: 0.8,       // How much avatar scrolls per pixel of page scroll (adjust for feel)
+                    scrollStopDelay: 200,        // Milliseconds after last scroll event to trigger snap
+                    // --- End New Settings ---
+                    cssVarDefaults: {            // Fallback values if CSS variables are not readable
+                        avatarSize: 72,
+                        avatarOverlap: 20,
+                        visibleAvatars: 3
+                    },
+                    // CSS classes used for state management
+                    snappingClass: 'snapping',
+                    partiallyHiddenClass: 'is-partially-hidden'
+                };
+
+                // --- DOM Element References ---
+                const container = document.getElementById(SETTINGS.containerId);
+                if (!container) {
+                    console.error(`Avatar group container with ID "${SETTINGS.containerId}" not found.`);
+                    return;
+                }
+                const viewport = container.querySelector(SETTINGS.viewportSelector);
+                const scroller = container.querySelector(SETTINGS.scrollerSelector);
+                const countElement = container.querySelector(SETTINGS.countSelector);
+
+                if (!viewport || !scroller || !countElement) {
+                    console.error("Required elements (viewport, scroller, count) not found within the container.");
+                    return;
+                }
+
+                // --- State Variables ---
+                let isHovering = false;         // Desktop: Is the mouse currently over the container?
+                let isScrollingEnabled = false; // Is the interactive behavior active?
+                let isMobileMode = false;       // Is the scroll-driven behavior active?
+                let animationFrameId = null;    // ID for cancelling the animation frame loop (hover/scroll update)
+                let hoverStartTime = null;      // Desktop: Timestamp when hover began (for easing)
+                let currentScrollPosition = 0;  // Tracks the theoretical scroll position (can exceed loop width)
+                let renderedAvatarItems = [];   // NodeList of all rendered avatar DOM elements
+                let layout = {                  // Stores calculated layout values
+                    avatarSize: 0,
+                    avatarOverlap: 0,
+                    visibleAvatarsCount: 0,
+                    avatarSlotWidth: 0,         // Effective width each avatar occupies (size - overlap)
+                    scrollerLoopWidth: 0        // Width of one full cycle of unique avatars
+                };
+                // --- New State for Scroll ---
+                let previousScrollY = 0;        // Mobile: Stores previous window scroll position
+                let scrollTimeoutId = null;     // Mobile: Timeout ID for detecting scroll stop
+                // let lastScrollDirection = 'none'; // Mobile: 'up', 'down', or 'none' - No longer needed for always forward scroll/snap
+                let isScrollUpdatePending = false; // Mobile: Flag for rAF scroll update throttling
+                let pendingScrollOffset = 0;    // Mobile: The target offset to apply in the next rAF
+
+                // --- Utility Functions ---
+
+                /** Reads a CSS custom property value */
+                function getCssVariable(varName, defaultValue) {
+                    const value = getComputedStyle(document.documentElement).getPropertyValue(`--${varName}`).trim();
+                    const parsedValue = parseInt(value, 10);
+                    return !isNaN(parsedValue) ? parsedValue : defaultValue;
+                }
+
+                /** Gets the current horizontal translation (translateX) */
+                function getCurrentTranslateX(element) {
+                    try {
+                        const styleTransform = element.style.transform;
+                        if (styleTransform && styleTransform.includes('translateX')) {
+                            const match = styleTransform.match(/translateX\(([-.\d]+)px\)/);
+                            if (match && match[1]) {
+                                return parseFloat(match[1]);
+                            }
+                        }
+                        const computedTransform = window.getComputedStyle(element).transform;
+                        if (computedTransform && computedTransform !== 'none') {
+                            const matrix = new DOMMatrixReadOnly(computedTransform);
+                            return matrix.m41;
+                        }
+                    } catch (e) {
+                        console.warn("Could not parse transform matrix:", e);
+                    }
+                    return 0;
+                }
+
+                /** Creates and appends avatar elements */
+                function populateAvatars(urls) {
+                    const fragment = document.createDocumentFragment();
+                    urls.forEach(url => {
+                        const item = document.createElement('div');
+                        item.className = SETTINGS.avatarItemSelector.substring(1);
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = 'Team Member Avatar';
+                        img.loading = 'lazy';
+                        img.draggable = false;
+                        item.appendChild(img);
+                        fragment.appendChild(item);
+                    });
+                    scroller.appendChild(fragment);
+                    renderedAvatarItems = scroller.querySelectorAll(SETTINGS.avatarItemSelector);
+                }
+
+                /** Prepares avatar URLs for rendering (shuffling/duplication) */
+                function prepareAvatarUrlsForRender(uniqueUrls) {
+                    const totalUniqueAvatars = uniqueUrls.length;
+                    let urlsToRender = [...uniqueUrls].sort(() => 0.5 - Math.random());
+
+                    if (isScrollingEnabled) {
+                        const requiredCount = layout.visibleAvatarsCount + totalUniqueAvatars;
+                        let safetyCounter = 0;
+                        const maxSafetyCount = 10;
+                        while (urlsToRender.length < requiredCount && safetyCounter < maxSafetyCount) {
+                            urlsToRender.push(...[...uniqueUrls].sort(() => 0.5 - Math.random()));
+                            safetyCounter++;
+                        }
+                        if (safetyCounter >= maxSafetyCount) {
+                            console.warn("Avatar duplication limit reached. Looping might not be seamless.");
+                        }
+                    }
+                    return urlsToRender;
+                }
+
+
+                // --- Animation & Interaction Logic ---
+
+                /** Easing function (Ease-Out Cubic) */
+                function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+                /** Desktop: Animation loop callback for hover scrolling. */
+                function animateHoverScroll() {
+                    if (!isHovering || !isScrollingEnabled || isMobileMode) {
+                        animationFrameId = null;
+                        return;
+                    }
+                    const currentTime = performance.now();
+                    const elapsedTime = currentTime - (hoverStartTime || currentTime);
+                    const easeProgress = Math.min(1, elapsedTime / SETTINGS.easeInDurationMs);
+                    const easedFactor = easeOutCubic(easeProgress);
+                    const currentSpeed = (layout.avatarSlotWidth * SETTINGS.scrollSpeedFactor) * easedFactor;
+                    currentScrollPosition += currentSpeed;
+                    applyScrollPosition();
+                    animationFrameId = requestAnimationFrame(animateHoverScroll);
+                }
+
+                /** Mobile: Callback for the rAF used to update scroll position */
+                function performScrollUpdate() {
+                    if (!isScrollUpdatePending) return;
+                    if (layout.scrollerLoopWidth > 0) {
+                        pendingScrollOffset = (pendingScrollOffset % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                    }
+                    scroller.style.transform = `translateX(-${pendingScrollOffset}px)`;
+                    isScrollUpdatePending = false;
+                    animationFrameId = null;
+                }
+
+                /** Mobile: Schedules a scroll update using requestAnimationFrame */
+                function scheduleScrollUpdate() {
+                    isScrollUpdatePending = true;
+                    if (layout.scrollerLoopWidth > 0) {
+                        pendingScrollOffset = currentScrollPosition % layout.scrollerLoopWidth;
+                        pendingScrollOffset = (pendingScrollOffset + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                    } else {
+                        pendingScrollOffset = currentScrollPosition;
+                    }
+                    if (!animationFrameId) {
+                        animationFrameId = requestAnimationFrame(performScrollUpdate);
+                    }
+                }
+
+                /** Common function to apply the currentScrollPosition visually */
+                function applyScrollPosition() {
+                    let visualOffset = 0;
+                    if (layout.scrollerLoopWidth > 0) {
+                        visualOffset = currentScrollPosition % layout.scrollerLoopWidth;
+                        visualOffset = (visualOffset + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                    } else {
+                        visualOffset = currentScrollPosition;
+                    }
+                    scroller.style.transform = `translateX(-${visualOffset}px)`;
+                }
+
+                /** Callback function for when the snap transition ends. */
+                function onSnapTransitionEnd() {
+                    scroller.classList.remove(SETTINGS.snappingClass);
+                    scroller.removeEventListener('transitionend', onSnapTransitionEnd);
+                    // --- MODIFICATION: Ensure no items are hidden after snap in mobile mode ---
+                    if (isMobileMode) {
+                        renderedAvatarItems.forEach(item => {
+                            item.classList.remove(SETTINGS.partiallyHiddenClass);
+                        });
+                    }
+                    // --- END MODIFICATION ---
+                }
+
+                /** Calculates the target scroll offset for snapping back. */
+                function calculateSnapTargetOffset(currentVisualOffset, direction) {
+                    if (layout.scrollerLoopWidth <= 0 || layout.avatarSlotWidth <= 0) {
+                        console.warn("Cannot calculate snap target, invalid layout dimensions.");
+                        return currentVisualOffset;
+                    }
+                    const positiveOffset = -currentVisualOffset;
+                    const normalizedOffset = (positiveOffset % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                    let targetSlotIndex;
+                    if (direction === 'forward') {
+                        targetSlotIndex = Math.ceil(normalizedOffset / layout.avatarSlotWidth);
+                    } else { // 'backward'
+                        targetSlotIndex = Math.floor(normalizedOffset / layout.avatarSlotWidth);
+                    }
+                    let targetOffsetPositive = targetSlotIndex * layout.avatarSlotWidth;
+                    if (direction === 'forward' && targetOffsetPositive >= layout.scrollerLoopWidth) {
+                        targetOffsetPositive = 0;
+                    }
+                    targetOffsetPositive = Math.max(0, targetOffsetPositive);
+                    targetOffsetPositive = (targetOffsetPositive % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                    return -targetOffsetPositive;
+                }
+
+                /** Determines the index of the avatar item to hide during snap (desktop only) */
+                function determineHiddenAvatarIndex(targetVisualOffset, direction) {
+                    if (layout.avatarSlotWidth <= 0 || renderedAvatarItems.length === 0) {
+                        return -1;
+                    }
+                    const snappedSlotIndex = Math.round(Math.abs(targetVisualOffset) / layout.avatarSlotWidth);
+                    let avatarToHideRawIndex;
+                    if (direction === 'forward') {
+                        avatarToHideRawIndex = snappedSlotIndex + layout.visibleAvatarsCount;
+                    } else { // 'backward'
+                        avatarToHideRawIndex = snappedSlotIndex - 1;
+                    }
+                    const hiddenAvatarRenderedIndex = Math.floor(avatarToHideRawIndex) % renderedAvatarItems.length;
+                    return (hiddenAvatarRenderedIndex + renderedAvatarItems.length) % renderedAvatarItems.length;
+                }
+
+
+                /** Desktop: Handles mouse entering the container. */
+                function startHoverScroll() {
+                    if (!isScrollingEnabled || isMobileMode) return;
+                    isHovering = true;
+                    hoverStartTime = performance.now();
+                    // Ensure no avatars are hidden when hover starts (relevant if previously mobile)
+                    renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
+                    scroller.classList.remove(SETTINGS.snappingClass);
+                    scroller.removeEventListener('transitionend', onSnapTransitionEnd);
+                    const currentVisualOffset = getCurrentTranslateX(scroller);
+                    if (layout.scrollerLoopWidth > 0) {
+                        const positiveOffset = (-currentVisualOffset + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                        currentScrollPosition = positiveOffset;
+                    } else {
+                        currentScrollPosition = -currentVisualOffset;
+                    }
+                    if (!animationFrameId) {
+                        animationFrameId = requestAnimationFrame(animateHoverScroll);
+                    }
+                }
+
+                /** Initiates the snap-back animation. */
+                function snapScroller(direction) {
+                    if (!isScrollingEnabled) return;
+
+                    if (animationFrameId && (isMobileMode ? isScrollUpdatePending : isHovering)) {
+                        cancelAnimationFrame(animationFrameId);
+                        animationFrameId = null;
+                        isScrollUpdatePending = false; // Reset mobile flag specifically
+                    }
+
+                    const currentVisualOffset = getCurrentTranslateX(scroller);
+                    const targetVisualOffset = calculateSnapTargetOffset(currentVisualOffset, direction);
+
+                    // --- MODIFICATION: Conditional Hiding Logic ---
+                    if (!isMobileMode) {
+                        // Only hide avatar on desktop
+                        if (Math.abs(currentVisualOffset - targetVisualOffset) < 0.5) {
+                            // Already close, just apply final hidden state if needed
+                            const finalHiddenIndex = determineHiddenAvatarIndex(targetVisualOffset, direction);
+                            renderedAvatarItems.forEach((item, index) => {
+                                item.classList.toggle(SETTINGS.partiallyHiddenClass, index === finalHiddenIndex);
+                            });
+                            return; // No transition needed
+                        }
+
+                        const hiddenAvatarIndex = determineHiddenAvatarIndex(targetVisualOffset, direction);
+                        renderedAvatarItems.forEach((item, index) => {
+                            item.classList.toggle(SETTINGS.partiallyHiddenClass, index === hiddenAvatarIndex);
+                        });
+                    } else {
+                        // On mobile, ensure *no* avatars are hidden during the snap process
+                        renderedAvatarItems.forEach(item => {
+                            item.classList.remove(SETTINGS.partiallyHiddenClass);
+                        });
+                        // If already close on mobile, no further action needed for hiding/showing
+                        if (Math.abs(currentVisualOffset - targetVisualOffset) < 0.5) {
+                            return;
+                        }
+                    }
+                    // --- END MODIFICATION ---
+
+                    scroller.classList.add(SETTINGS.snappingClass);
+                    scroller.addEventListener('transitionend', onSnapTransitionEnd, { once: true });
+
+                    requestAnimationFrame(() => {
+                        const stillSnapping = scroller.classList.contains(SETTINGS.snappingClass);
+                        const interactionResumed = isMobileMode ? isScrollUpdatePending : isHovering;
+
+                        if (stillSnapping && !interactionResumed) {
+                            scroller.style.transform = `translateX(${targetVisualOffset}px)`;
+                            if (layout.scrollerLoopWidth > 0) {
+                                currentScrollPosition = (-targetVisualOffset + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
+                            } else {
+                                currentScrollPosition = -targetVisualOffset;
+                            }
+                        } else if (interactionResumed) {
+                            // If interaction resumed during snap setup, cancel the snap immediately
+                            scroller.classList.remove(SETTINGS.snappingClass);
+                            scroller.removeEventListener('transitionend', onSnapTransitionEnd);
+                            // --- MODIFICATION: Ensure hidden class is removed if snap cancelled ---
+                            if (!isMobileMode) {
+                                renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
+                            }
+                            // --- END MODIFICATION ---
+                        }
+                    });
+                }
+
+
+                /** Desktop: Handles mouse leaving the container. */
+                function stopHoverScrollAndSnap() {
+                    if (!isScrollingEnabled || isMobileMode) return;
+                    isHovering = false;
+                    hoverStartTime = null;
+                    snapScroller('forward');
+                }
+
+                // --- Mobile Scroll Interaction ---
+
+                /** Mobile: Handles the window scroll event. */
+                function handlePageScroll() {
+                    if (!isScrollingEnabled || !isMobileMode) return;
+                    if (scrollTimeoutId) clearTimeout(scrollTimeoutId);
+
+                    // Interrupt snapping if scroll starts
+                    if (scroller.classList.contains(SETTINGS.snappingClass)) {
+                        scroller.classList.remove(SETTINGS.snappingClass);
+                        scroller.removeEventListener('transitionend', onSnapTransitionEnd);
+                        // Ensure avatars are visible when snapping is interrupted
+                        renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
+                    }
+
+                    const currentScrollY = window.scrollY;
+                    const deltaY = currentScrollY - previousScrollY;
+                    currentScrollPosition += Math.abs(deltaY) * SETTINGS.scrollMultiplier; // Always scroll forward visually
+                    scheduleScrollUpdate();
+                    previousScrollY = currentScrollY;
+                    scrollTimeoutId = setTimeout(handleScrollStop, SETTINGS.scrollStopDelay);
+                }
+
+                /** Mobile: Called when the scroll stop timeout completes. */
+                function handleScrollStop() {
+                    if (!isScrollingEnabled || !isMobileMode) return;
+                    scrollTimeoutId = null;
+                    snapScroller('forward'); // Always snap forward
+                }
+
+                // --- Initialization ---
+
+                /** Sets up the avatar group component. */
+                function initializeAvatarGroup() {
+                    if (!SETTINGS.avatarUrls || SETTINGS.avatarUrls.length === 0) {
+                        console.warn("No avatar URLs provided in SETTINGS.avatarUrls.");
+                        if (countElement) countElement.style.display = 'none';
+                        if (container) container.style.display = 'none';
+                        return;
+                    }
+
+                    isMobileMode = window.matchMedia('(pointer: coarse)').matches;
+
+                    requestAnimationFrame(() => {
+                        // Read layout AFTER potential CSS updates from media queries
+                        layout.avatarSize = getCssVariable('avatar-size', SETTINGS.cssVarDefaults.avatarSize);
+                        layout.avatarOverlap = getCssVariable('avatar-overlap', SETTINGS.cssVarDefaults.avatarOverlap);
+                        layout.visibleAvatarsCount = getCssVariable('visible-avatars', SETTINGS.cssVarDefaults.visibleAvatars);
+                        layout.avatarSlotWidth = layout.avatarSize - layout.avatarOverlap;
+
+                        if (viewport) {
+                            const viewportWidth = layout.avatarSize + (layout.visibleAvatarsCount - 1) * layout.avatarSlotWidth;
+                            viewport.style.setProperty('--viewport-width', `${viewportWidth}px`);
+                            viewport.style.width = `${viewportWidth}px`;
+                        }
+
+                        if (layout.avatarSlotWidth <= 0) {
+                            console.error("Calculated 'avatarSlotWidth' is zero or negative. Disabling component.");
+                            if (container) container.style.display = 'none';
+                            return;
+                        }
+
+                        const totalUniqueAvatars = SETTINGS.avatarUrls.length;
+                        isScrollingEnabled = totalUniqueAvatars >= SETTINGS.minAvatarsForScroll;
+
+                        if (isScrollingEnabled) {
+                            layout.scrollerLoopWidth = layout.avatarSlotWidth * totalUniqueAvatars;
+                        }
+
+                        const urlsToRender = prepareAvatarUrlsForRender(SETTINGS.avatarUrls);
+                        populateAvatars(urlsToRender);
+
+                        if (renderedAvatarItems.length === 0 && urlsToRender.length > 0) {
+                            console.warn("Avatars populated but renderedAvatarItems empty. Re-querying.");
+                            renderedAvatarItems = scroller.querySelectorAll(SETTINGS.avatarItemSelector);
+                        }
+
+                        if (isScrollingEnabled) {
+                            if (SETTINGS.staticCountText && countElement) {
+                                countElement.textContent = SETTINGS.staticCountText;
+                                countElement.style.display = '';
+                            } else if (countElement) {
+                                countElement.style.display = 'none';
+                            }
+
+                            // --- MODIFICATION: Conditional initial hiding ---
+                            if (!isMobileMode) {
+                                // Desktop: Hide the avatar just outside the viewport initially
+                                const initialHiddenIndex = Math.floor(layout.visibleAvatarsCount);
+                                if (renderedAvatarItems.length > initialHiddenIndex && renderedAvatarItems[initialHiddenIndex]) {
+                                    renderedAvatarItems[initialHiddenIndex].classList.add(SETTINGS.partiallyHiddenClass);
+                                } else if (renderedAvatarItems.length <= layout.visibleAvatarsCount && countElement) {
+                                    countElement.style.display = 'none';
+                                    console.warn("Fewer rendered avatars than visible slots. Hiding count.");
+                                }
+                            } else {
+                                // Mobile: Ensure NO avatars are hidden initially
+                                renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
+                            }
+                            // --- END MODIFICATION ---
+
+                            if (isMobileMode) {
+                                previousScrollY = window.scrollY;
+                                document.addEventListener('scroll', handlePageScroll, { passive: true });
+                                if (container) {
+                                    container.removeEventListener('mouseenter', startHoverScroll);
+                                    container.removeEventListener('mouseleave', stopHoverScrollAndSnap);
+                                }
+                            } else {
+                                if (container) {
+                                    container.addEventListener('mouseenter', startHoverScroll);
+                                    container.addEventListener('mouseleave', stopHoverScrollAndSnap);
+                                }
+                                document.removeEventListener('scroll', handlePageScroll);
+                            }
+
+                        } else {
+                            // Scrolling disabled: Ensure no avatars hidden, hide count, adjust width
+                            if (countElement) countElement.style.display = 'none';
+                            const nonScrollingAvatarCount = Math.min(totalUniqueAvatars, layout.visibleAvatarsCount);
+                            const nonScrollingWidth = layout.avatarSize + Math.max(0, nonScrollingAvatarCount - 1) * layout.avatarSlotWidth;
+                            if (viewport) viewport.style.width = `${nonScrollingWidth}px`;
+                            renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass)); // Ensure clean state
+                        }
+
+                        if (scroller) scroller.style.transform = 'translateX(0px)';
+                        currentScrollPosition = 0;
+                    });
+                }
+
+                // --- Run Initialization ---
+                document.addEventListener('DOMContentLoaded', initializeAvatarGroup);
+
+            })(); // End of IIFE
+        </script>
+
+    </body>
+
+</html>
