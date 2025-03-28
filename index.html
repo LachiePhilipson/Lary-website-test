@@ -14,56 +14,40 @@
             /* --- General Page Style --- */
             body {
                 background-color: #260A2F;
-                /* align-items: center; REMOVED - Flexbox on hero handles centering */
                 min-height: 100vh;
                 padding: 60px 20px;
-                /* Keeps padding around the whole page */
                 box-sizing: border-box;
                 font-family: 'IBM Plex Sans', sans-serif;
                 margin: 0;
                 color: #FFFFFF;
                 display: flex;
-                /* Make body a flex container */
                 flex-direction: column;
-                /* Stack children (hero, scrollable) vertically */
             }
 
             /* --- Hero Content Styling --- */
             .hero-content {
                 font-size: 4rem;
-                /* Base size for desktop */
                 font-weight: bold;
                 line-height: 1.2;
                 letter-spacing: -0.02em;
                 text-align: left;
                 max-width: 1200px;
-                /* Optional: constrain max width on large screens */
                 width: 100%;
-                /* Take available width */
                 /* --- START Modifications for 50vh Height & Centering --- */
                 height: 50vh;
-                /* Set height to 50% of viewport height */
                 display: flex;
-                /* Enable Flexbox */
                 flex-direction: column;
-                /* Stack lines vertically */
                 justify-content: center;
-                /* Vertically center the lines within the 50vh */
                 margin-left: auto;
-                /* Horizontally center the block when max-width is hit */
                 margin-right: auto;
-                /* Horizontally center the block when max-width is hit */
                 flex-shrink: 0;
-                /* Prevent hero from shrinking if content below grows */
                 /* --- END Modifications --- */
             }
 
-            /* --- Styles for lines within hero remain largely the same --- */
             .hero-content .line-1 {
                 display: flex;
                 align-items: baseline;
                 flex-wrap: wrap;
-                /* Allow wrapping on smaller screens */
                 margin-bottom: 0.1em;
             }
 
@@ -71,18 +55,14 @@
             .hero-content .line-3,
             .hero-content .line-4 {
                 margin-bottom: 0.1em;
-                /* Allow wrapping for individual lines too if needed */
                 word-break: break-word;
             }
 
             .hero-content .inline-block {
                 display: inline-block;
                 vertical-align: middle;
-                /* Keeps vertical alignment */
                 margin: 0 0.2em;
-                /* Adjust spacing */
                 position: relative;
-                /* Ensure it doesn't cause excessive line height issues */
                 line-height: 1;
             }
 
@@ -90,13 +70,10 @@
                 display: inline-block;
                 vertical-align: baseline;
                 width: 0.8em;
-                /* Scales with font size */
                 height: 0.8em;
-                /* Scales with font size */
                 margin: 0 0.05em;
                 position: relative;
                 top: -0.05em;
-                /* Adjust vertical position relative to baseline */
             }
 
             .hero-content .text-orange {
@@ -105,68 +82,49 @@
 
             /* --- Scrollable Content Styling --- */
             .scrollable-content {
-                /* Allow this section to take remaining space and scroll if needed */
                 flex-grow: 1;
                 overflow-y: auto;
-                /* Add scroll if content exceeds available space */
                 max-width: 1200px;
-                /* Match hero max-width */
                 width: 100%;
-                /* Take available width */
                 margin-left: auto;
-                /* Center the content block */
                 margin-right: auto;
-                /* Center the content block */
                 padding-top: 2em;
-                /* Add some space above the scrollable text */
             }
 
             .scrollable-content p {
                 font-family: sans-serif;
                 font-weight: normal;
                 font-size: 1rem;
-                /* Use rem for better accessibility */
                 line-height: 1.7;
-                /* margin-top: 4em; REMOVED - Space handled by scrollable-content padding */
                 margin-bottom: 1.5em;
                 color: #fff;
-                /* Slightly softer white for paragraph text */
             }
 
             .scrollable-content h2 {
                 margin-top: 2em;
-                /* Space above heading */
                 margin-bottom: 1em;
-                /* Space below heading */
             }
 
 
             /* --- Avatar Group Styling --- */
-            /* ... (Existing avatar styles remain unchanged) ... */
             :root {
                 /* Core Dimensions & Layout */
                 --avatar-size: 72px;
                 --avatar-overlap: 20px;
                 --visible-avatars: 3;
                 --container-padding: 0px;
-                /* Keep for consistency, though 0 */
 
                 /* Border & Background Settings */
                 --background-color-outer: #FF4F00;
                 --border-color-outer: #FFE0CC;
                 --border-width-outer: 4px;
                 --background-color-inner: #FF4F00;
-                /* Background for avatar item before image loads */
                 --avatar-stroke-color: #FF4F00;
-                /* Border around each avatar item */
                 --avatar-border-thickness: 6px;
-                /* Thickness of the border around each avatar */
                 --viewport-overlay-border-width: 6px;
-                /* Thickness of the inner viewport border */
                 --viewport-overlay-border-color: #FF4F00;
-                /* Color of the inner viewport border */
 
-                /* Concentric Border Radii - calculated to maintain curve */
+                /* Concentric Border Radii */
                 --border-radius-outer: 20px;
                 --border-radius-viewport: max(0px, calc(var(--border-radius-outer) - var(--border-width-outer) - var(--container-padding)));
                 --border-radius-avatar-item: max(0px, var(--border-radius-viewport));
@@ -174,7 +132,7 @@
 
                 /* Derived Layout Calculations */
                 --avatar-slot-width: calc(var(--avatar-size) - var(--avatar-overlap));
-                --viewport-width: calc(var(--avatar-size) + (var(--visible-avatars) - 1) * var(--avatar-slot-width));
+                /* --viewport-width is now set dynamically by JS */
 
                 /* Plus Count Appearance */
                 --text-color-count: #FFFFFF;
@@ -190,25 +148,19 @@
                 border-radius: var(--border-radius-outer);
                 border: var(--border-width-outer) solid var(--border-color-outer);
                 width: fit-content;
-                /* Adapts to viewport width + count */
                 cursor: default;
-                /* Default cursor, interaction is hover only */
                 box-sizing: border-box;
                 overflow: hidden;
-                /* Clips the outer border radius */
                 position: relative;
             }
 
             .avatar-viewport {
                 width: var(--viewport-width);
-                /* Calculated width based on visible avatars */
+                /* Dynamically set via JS */
                 height: var(--avatar-size);
                 overflow: hidden;
-                /* Clips the avatars scrolling inside */
                 border-radius: var(--border-radius-viewport);
-                /* Inner border radius */
                 position: relative;
-                /* For pseudo-element positioning */
                 box-sizing: border-box;
             }
 
@@ -220,26 +172,19 @@
                 right: 0;
                 bottom: 0;
                 border-radius: inherit;
-                /* Takes radius from .avatar-viewport */
                 border: var(--viewport-overlay-border-width) solid var(--viewport-overlay-border-color);
                 box-sizing: border-box;
-                /* Border included in element dimensions */
                 pointer-events: none;
-                /* Allows clicks/hovers to pass through */
                 z-index: 10;
-                /* Sits above avatar items but below count */
             }
 
             .avatar-scroller {
                 display: flex;
                 height: 100%;
                 will-change: transform;
-                /* Hint for performance */
                 box-sizing: border-box;
                 position: relative;
-                /* Needed for transform */
                 transform: translateX(0);
-                /* Initial position */
             }
 
             .avatar-scroller.snapping {
@@ -250,11 +195,9 @@
                 width: var(--avatar-size);
                 height: var(--avatar-size);
                 flex-shrink: 0;
-                /* Prevent avatars from shrinking */
                 margin-right: calc(-1 * var(--avatar-overlap));
                 border-radius: var(--border-radius-avatar-item);
                 overflow: hidden;
-                /* Clips the image inside */
                 background-color: var(--background-color-inner);
                 box-sizing: border-box;
                 display: flex;
@@ -264,14 +207,24 @@
                 position: relative;
                 opacity: 1;
                 transition: transform 0.5s;
-                /* Opacity transition handled separately */
+                /* Opacity transition handled separately for snap */
                 pointer-events: auto;
             }
 
             .avatar-item.is-partially-hidden {
                 opacity: 0;
                 pointer-events: none;
+                transition: opacity 0.3s ease-in-out;
+                /* Add transition for hiding */
             }
+
+            /* Make visible smoothly */
+            .avatar-item:not(.is-partially-hidden) {
+                opacity: 1;
+                transition: opacity 0.3s ease-in-out 0.1s;
+                /* Delay becoming visible slightly */
+            }
+
 
             .avatar-item img {
                 display: block;
@@ -287,10 +240,8 @@
                 color: var(--text-color-count);
                 font-size: var(--font-size-count);
                 font-weight: 700;
-                /* Match hero font weight */
                 margin-left: var(--count-margin-left);
                 margin-right: 16px;
-                /* Fixed spacing on the right */
                 white-space: nowrap;
                 pointer-events: none;
                 user-select: none;
@@ -304,79 +255,62 @@
             @media (max-width: 768px) {
                 body {
                     padding: 40px 15px;
-                    /* Reduce padding on smaller screens */
                 }
 
                 .hero-content {
                     font-size: 2.5rem;
-                    /* Reduce font size significantly */
                     height: auto;
-                    /* Let height be determined by content on smaller screens */
                     min-height: 40vh;
-                    /* Ensure it still takes up significant space */
                     padding: 2em 0;
-                    /* Add some vertical padding instead of fixed height */
                 }
 
                 .hero-content .inline-block {
                     margin: 0.2em 0.15em;
-                    /* Adjust spacing around avatar/spark */
-                    /* Add vertical margin if it wraps to its own line */
                     margin-bottom: 0.4em;
                 }
 
                 .scrollable-content {
                     padding-top: 1.5em;
-                    /* Adjust space */
                 }
 
-                /* Adjust avatar size and count font on smaller screens if needed */
-                :root {
-                    /* Example: Optionally reduce avatar size on mobile */
-                    /* --avatar-size: 60px; */
-                    /* --avatar-overlap: 15px; */
-                    /* --font-size-count: 22px; */
-                }
+                /* Optional: Adjust avatar size on mobile */
+                /* :root {
+                    --avatar-size: 60px;
+                    --avatar-overlap: 15px;
+                    --font-size-count: 22px;
+                } */
             }
 
             @media (max-width: 480px) {
                 body {
                     padding: 30px 10px;
-                    /* Further reduce padding */
                 }
 
                 .hero-content {
                     font-size: 2rem;
-                    /* Further reduce font size */
                     min-height: 35vh;
                     padding: 1.5em 0;
                 }
 
-                /* Further adjustments if needed for very small screens */
                 :root {
-                    /* Example: Further reduce avatar size */
                     --avatar-size: 56px;
                     --avatar-overlap: 15px;
                     --font-size-count: 20px;
                     --border-radius-outer: 16px;
-                    /* Slightly smaller radius */
                     --avatar-border-thickness: 4px;
                     --viewport-overlay-border-width: 4px;
                 }
 
                 .avatar-plus-count {
                     margin-right: 10px;
-                    /* Reduce right margin */
                 }
 
                 .scrollable-content {
                     padding-top: 1em;
-                    /* Adjust space */
                 }
 
                 .scrollable-content p {
                     font-size: 0.95rem;
-                    /* Slightly smaller text on very small screens */
                 }
             }
         </style>
@@ -418,7 +352,7 @@
         </div>
 
         <div class="scrollable-content">
-
+            <!-- Placeholder text -->
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
             <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum
@@ -435,10 +369,11 @@
                 fames ac turpis egestas. Morbi lectus. Nulla facilisi.</p>
             <p>Vestibulum et metus. Curabitur et felis. Praesent sagittis. Sed aliquet odio vitae tortor. Nunc tincidunt nisi vitae velit. Aliquam erat volutpat. Integer malesuada. Class aptent taciti sociosqu ad litora torquent per conubia nostra,
                 per inceptos himenaeos.</p>
-
         </div>
+
         <script>
-            (function () { // IIFE for encapsulation 'use strict' ;
+            (function () { // IIFE for encapsulation
+                'use strict';
 
                 // --- Configuration & Settings ---
                 const SETTINGS = {
@@ -447,19 +382,20 @@
                     scrollerSelector: '.avatar-scroller',
                     countSelector: '#avatarCount',
                     avatarItemSelector: '.avatar-item',
-                    avatarUrls: [ // Example URLs 'https://picsum.photos/id/1005/150/150' , 'https://picsum.photos/id/1011/150/150' , 'https://picsum.photos/id/1012/150/150' , 'https://picsum.photos/id/1027/150/150'
-                        , 'https://picsum.photos/id/10/150/150', 'https://picsum.photos/id/20/150/150', 'https://picsum.photos/id/30/150/150', 'https://picsum.photos/id/40/150/150', 'https://picsum.photos/id/50/150/150'
-                        , 'https://picsum.photos/id/60/150/150'
-                        // Add more URLs as needed
+                    avatarUrls: [ // Avatars will appear in this specific order
+                        'https://picsum.photos/id/10/150/150',
+                        'https://picsum.photos/id/20/150/150',
+                        'https://picsum.photos/id/30/150/150',
+                        'https://picsum.photos/id/40/150/150',
+                        'https://picsum.photos/id/50/150/150',
+                        'https://picsum.photos/id/60/150/150'
+                        // Add more URLs here as needed
                     ],
-                    staticCountText: "+25", // Text for the count element when scrolling is active. Set to null or empty to hide count.
-                    scrollSpeedFactor: 0.15, // Desktop: Multiplier for hover scroll speed (~pixels per frame target) - ADJUST FOR FEEL
-                    easeInDurationMs: 1500, // Desktop: Duration of the ease-in effect when hover starts (milliseconds)
-                    minAvatarsForScroll: 4, // Minimum total unique avatars needed to enable scrolling behavior
-                    // --- Settings for Scroll Interaction ---
-                    scrollMultiplier: 0.8, // Mobile: How much avatar scrolls per pixel of page scroll (adjust for feel)
-                    scrollStopDelay: 200, // Mobile: Milliseconds after last scroll event (unused for snapping now)
-                    // --- End Settings ---
+                    staticCountText: "+25", // Text for the count element when scrolling is active. Set to null/empty to hide.
+                    scrollSpeedFactor: 0.15, // Desktop: Multiplier for hover scroll speed. Adjust for feel.
+                    easeInDurationMs: 1500, // Desktop: Duration of the ease-in effect on hover start (milliseconds).
+                    minAvatarsForScroll: 4, // Minimum total avatars needed to enable scrolling behavior.
+                    scrollMultiplier: 0.8, // Mobile: How much avatar scrolls per pixel of page scroll. Adjust for feel.
                     cssVarDefaults: { // Fallback values if CSS variables are not readable
                         avatarSize: 72,
                         avatarOverlap: 20,
@@ -491,31 +427,29 @@
                 let isMobileMode = false; // Is the scroll-driven behavior active?
                 let animationFrameId = null; // ID for cancelling the animation frame loop (hover/scroll update)
                 let hoverStartTime = null; // Desktop: Timestamp when hover began (for easing)
-                let currentScrollPosition = 0; // Tracks the theoretical scroll position (can exceed loop width, can be negative)
+                let currentScrollPosition = 0; // Tracks the logical scroll position (can exceed loop width, can be negative)
                 let renderedAvatarItems = []; // NodeList of all rendered avatar DOM elements
                 let layout = { // Stores calculated layout values
                     avatarSize: 0,
                     avatarOverlap: 0,
                     visibleAvatarsCount: 0,
                     avatarSlotWidth: 0, // Effective width each avatar occupies (size - overlap)
-                    scrollerLoopWidth: 0 // Width of one full cycle of unique avatars
+                    scrollerLoopWidth: 0 // Width of one full cycle of unique avatars (unique count * slot width)
                 };
-                // --- State for Scroll ---
+                // --- State for Mobile Scroll ---
                 let previousScrollY = 0; // Mobile: Stores previous window scroll position
-                let scrollTimeoutId = null; // Mobile: Timeout ID for detecting scroll stop
                 let isScrollUpdatePending = false; // Mobile: Flag for rAF scroll update throttling
-                let pendingScrollOffset = 0; // Mobile: The target offset to apply in the next rAF
 
                 // --- Utility Functions ---
 
-                /** Reads a CSS custom property value */
+                /** Reads a CSS custom property value from the root element */
                 function getCssVariable(varName, defaultValue) {
                     const value = getComputedStyle(document.documentElement).getPropertyValue(`--${varName}`).trim();
                     const parsedValue = parseInt(value, 10);
                     return !isNaN(parsedValue) ? parsedValue : defaultValue;
                 }
 
-                /** Gets the current horizontal translation (translateX) */
+                /** Gets the current horizontal translation (translateX) from element style or computed style */
                 function getCurrentTranslateX(element) {
                     try {
                         const styleTransform = element.style.transform;
@@ -528,51 +462,60 @@
                         const computedTransform = window.getComputedStyle(element).transform;
                         if (computedTransform && computedTransform !== 'none') {
                             const matrix = new DOMMatrixReadOnly(computedTransform);
-                            return matrix.m41;
+                            return matrix.m41; // m41 corresponds to the tx value in a 2D matrix
                         }
                     } catch (e) {
                         console.warn("Could not parse transform matrix:", e);
                     }
-                    return 0;
+                    return 0; // Default to 0 if unable to parse
                 }
 
-                /** Creates and appends avatar elements */
+                /** Creates and appends avatar elements to the scroller */
                 function populateAvatars(urls) {
                     const fragment = document.createDocumentFragment();
                     urls.forEach(url => {
                         const item = document.createElement('div');
-                        item.className = SETTINGS.avatarItemSelector.substring(1);
+                        item.className = SETTINGS.avatarItemSelector.substring(1); // Remove leading '.'
                         const img = document.createElement('img');
                         img.src = url;
-                        img.alt = 'Team Member Avatar';
-                        img.loading = 'lazy';
-                        img.draggable = false;
+                        img.alt = 'Team Member Avatar'; // Consider more descriptive alt text if possible
+                        img.loading = 'lazy'; // Improve initial page load performance
+                        img.draggable = false; // Prevent default image drag behavior
                         item.appendChild(img);
                         fragment.appendChild(item);
                     });
                     scroller.appendChild(fragment);
+                    // Update the reference to the newly added DOM elements
                     renderedAvatarItems = scroller.querySelectorAll(SETTINGS.avatarItemSelector);
                 }
 
-                /** Prepares avatar URLs for rendering (shuffling/duplication) */
+                /**
+                 * Prepares avatar URLs for rendering by duplicating and prepending
+                 * the original sequence as needed for seamless looping, maintaining the original order.
+                 */
                 function prepareAvatarUrlsForRender(uniqueUrls) {
                     const totalUniqueAvatars = uniqueUrls.length;
-                    let urlsToRender = [...uniqueUrls].sort(() => 0.5 - Math.random());
+                    let urlsToRender = [...uniqueUrls]; // Start with the original, ordered list
 
                     if (isScrollingEnabled) {
-                        // Ensure enough avatars for seamless looping in both directions
-                        const requiredCount = layout.visibleAvatarsCount + totalUniqueAvatars * 2; // Double for reverse wrapping
+                        // Calculate how many avatars are needed for seamless looping in both directions.
+                        // Need visible count + one full set for forward wrap + one full set for backward wrap.
+                        const requiredCount = layout.visibleAvatarsCount + totalUniqueAvatars * 2;
+
+                        // Duplicate the original sequence until we have enough avatars.
+                        // Using a safety counter to prevent potential infinite loops with unusual settings.
                         let safetyCounter = 0;
-                        const maxSafetyCount = 15; // Increased limit slightly
+                        const maxSafetyCount = 15;
                         while (urlsToRender.length < requiredCount && safetyCounter < maxSafetyCount) {
-                            urlsToRender.push(...[...uniqueUrls].sort(() => 0.5 - Math.random()));
+                            urlsToRender.push(...uniqueUrls); // Append the original ordered sequence
                             safetyCounter++;
                         }
                         if (safetyCounter >= maxSafetyCount) {
                             console.warn("Avatar duplication limit reached. Looping might not be seamless.");
                         }
-                        // Prepend avatars for initial negative scrolling capability
-                        urlsToRender = [...urlsToRender.slice(-totalUniqueAvatars), ...urlsToRender];
+
+                        // Prepend one full original sequence to allow immediate backward scrolling/wrapping.
+                        urlsToRender = [...uniqueUrls, ...urlsToRender];
                     }
                     return urlsToRender;
                 }
@@ -580,154 +523,151 @@
 
                 // --- Animation & Interaction Logic ---
 
-                /** Easing function (Ease-Out Cubic) */
-                function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+                /** Easing function (Ease-Out Cubic) for desktop hover acceleration */
+                function easeOutCubic(t) {
+                    return 1 - Math.pow(1 - t, 3);
+                }
 
                 /** Desktop: Animation loop callback for hover scrolling. */
                 function animateHoverScroll() {
                     if (!isHovering || !isScrollingEnabled || isMobileMode) {
-                        animationFrameId = null;
+                        animationFrameId = null; // Stop the loop if conditions aren't met
                         return;
                     }
                     const currentTime = performance.now();
+                    // Calculate time elapsed since hover started for easing effect
                     const elapsedTime = currentTime - (hoverStartTime || currentTime);
+                    // Apply easing function (progress capped at 1)
                     const easeProgress = Math.min(1, elapsedTime / SETTINGS.easeInDurationMs);
                     const easedFactor = easeOutCubic(easeProgress);
+                    // Calculate current scroll speed based on settings and easing
                     const currentSpeed = (layout.avatarSlotWidth * SETTINGS.scrollSpeedFactor) * easedFactor;
-                    currentScrollPosition += currentSpeed; // Always forward for hover
-                    applyScrollPosition();
+
+                    currentScrollPosition += currentSpeed; // Increment logical scroll position (always forward on hover)
+
+                    applyScrollPosition(); // Update the visual translateX
+
+                    // Request the next frame to continue the animation
                     animationFrameId = requestAnimationFrame(animateHoverScroll);
                 }
 
-                /** Mobile: Callback for the rAF used to update scroll position */
+                /** Mobile: Callback for the rAF used to update scroll position based on page scroll */
                 function performScrollUpdate() {
-                    if (!isScrollUpdatePending) return; // Already processed or not needed
+                    if (!isScrollUpdatePending) return; // Exit if no update is scheduled
 
-                    if (layout.scrollerLoopWidth > 0) {
-                        // Modulo operation ensures the visual offset wraps correctly
-                        // The result of '%' can be negative in JS, so add loop width and take modulo again
-                        // to ensure a positive result within [0, scrollerLoopWidth).
-                        pendingScrollOffset = (currentScrollPosition % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
-                    } else {
-                        pendingScrollOffset = currentScrollPosition; // No loop, just use the raw position
-                    }
+                    // Apply the calculated visual offset
+                    applyScrollPosition();
 
-                    scroller.style.transform = `translateX(-${pendingScrollOffset}px)`;
-                    isScrollUpdatePending = false;
-                    animationFrameId = null; // Release the lock
+                    isScrollUpdatePending = false; // Reset the flag
+                    animationFrameId = null; // Release the rAF lock
                 }
 
-                /** Mobile: Schedules a scroll update using requestAnimationFrame */
+                /** Mobile: Schedules a scroll update using requestAnimationFrame for performance */
                 function scheduleScrollUpdate() {
                     isScrollUpdatePending = true; // Mark that an update is needed
-                    // The calculation of pendingScrollOffset is now done inside performScrollUpdate
                     if (!animationFrameId) { // Only request a new frame if one isn't already pending
                         animationFrameId = requestAnimationFrame(performScrollUpdate);
                     }
                 }
 
-
-                /** Common function to apply the currentScrollPosition visually (used by Desktop hover) */
+                /** Common function to apply the currentScrollPosition visually using translateX, handling wrapping */
                 function applyScrollPosition() {
                     let visualOffset = 0;
                     if (layout.scrollerLoopWidth > 0) {
-                        // Use the same robust modulo logic as performScrollUpdate
+                        // Use modulo arithmetic to wrap the scroll position within the loop width.
+                        // Ensures the visual offset stays within [0, scrollerLoopWidth).
+                        // The double modulo handles potential negative results from JS '%' operator.
                         visualOffset = (currentScrollPosition % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
                     } else {
+                        // If no looping (scrolling disabled or error), just use the raw position.
                         visualOffset = currentScrollPosition;
                     }
                     scroller.style.transform = `translateX(-${visualOffset}px)`;
                 }
 
-                /** Callback function for when the snap transition ends (Desktop only). */
+
+                /** Desktop: Callback function for when the snap transition ends. */
                 function onSnapTransitionEnd() {
                     scroller.classList.remove(SETTINGS.snappingClass);
                     scroller.removeEventListener('transitionend', onSnapTransitionEnd);
-                    // Ensure no items are hidden after snap (relevant for desktop)
-                    renderedAvatarItems.forEach(item => {
-                        item.classList.remove(SETTINGS.partiallyHiddenClass);
-                    });
-                    // Re-calculate the hidden one based on final snapped position for desktop
+
+                    // Ensure visual position matches logical position after snap
+                    applyScrollPosition();
+
+                    // Re-calculate which avatar should be hidden based on the final snapped position.
                     const finalVisualOffset = getCurrentTranslateX(scroller);
-                    if (layout.avatarSlotWidth > 0) { // Prevent division by zero
-                        const finalSnappedSlotIndex = Math.round(Math.abs(finalVisualOffset) / layout.avatarSlotWidth);
-                        const finalHiddenIndex = (finalSnappedSlotIndex + layout.visibleAvatarsCount) % renderedAvatarItems.length;
-                        if (renderedAvatarItems[finalHiddenIndex]) {
-                            renderedAvatarItems[finalHiddenIndex].classList.add(SETTINGS.partiallyHiddenClass);
-                        }
-                    }
+                    const finalHiddenIndex = determineHiddenAvatarIndex(finalVisualOffset);
+                    renderedAvatarItems.forEach((item, index) => {
+                        item.classList.toggle(SETTINGS.partiallyHiddenClass, index === finalHiddenIndex);
+                    });
                 }
 
-                /** Calculates the target scroll offset for snapping back (Desktop only). */
-                function calculateSnapTargetOffset(currentVisualOffset, direction) {
-                    // No snapping on mobile
+                /** Desktop: Calculates the target scroll offset for snapping back on mouse leave. */
+                function calculateSnapTargetOffset(currentVisualOffset) {
+                    // Snapping is only for desktop mode with looping enabled.
                     if (isMobileMode || layout.scrollerLoopWidth <= 0 || layout.avatarSlotWidth <= 0) {
-                        return currentVisualOffset;
+                        return currentVisualOffset; // Return current offset if no snap needed
                     }
 
-                    // Use the reliable modulo logic for normalization
+                    // Normalize the current offset to be positive and within the loop width.
                     const positiveOffset = (-currentVisualOffset % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
 
-                    let targetSlotIndex;
+                    // Find the index of the next slot to snap to (always rounding up for forward snap).
+                    const targetSlotIndex = Math.ceil(positiveOffset / layout.avatarSlotWidth);
 
-                    // Desktop always snaps 'forward' visually on mouse out
-                    targetSlotIndex = Math.ceil(positiveOffset / layout.avatarSlotWidth);
+                    // Calculate the target offset in the positive range [0, scrollerLoopWidth).
+                    let targetOffsetPositive = (targetSlotIndex * layout.avatarSlotWidth) % layout.scrollerLoopWidth;
 
-                    let targetOffsetPositive = targetSlotIndex * layout.avatarSlotWidth;
-
-                    // Handle loop wrap-around explicitly (though modulo should handle it)
-                    if (targetOffsetPositive >= layout.scrollerLoopWidth) {
-                        targetOffsetPositive = 0;
-                    }
-
-                    // Ensure it's within bounds [0, scrollerLoopWidth)
-                    targetOffsetPositive = (targetOffsetPositive % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
-
-                    return -targetOffsetPositive; // Return the negative translateX value
+                    // Return the negative value required for translateX.
+                    return -targetOffsetPositive;
                 }
 
 
-                /** Determines the index of the avatar item to hide during snap (Desktop only). */
-                function determineHiddenAvatarIndex(targetVisualOffset, direction) {
-                    // No snapping/hiding logic needed on mobile
+                /** Desktop: Determines the index of the avatar item to hide during/after snap animation. */
+                function determineHiddenAvatarIndex(targetVisualOffset) {
+                    // Hiding logic is only for desktop mode with looping enabled.
                     if (isMobileMode || layout.avatarSlotWidth <= 0 || renderedAvatarItems.length === 0) {
-                        return -1;
+                        return -1; // Return -1 if no avatar should be hidden
                     }
-                    // Calculate based on the absolute offset and slot width
+
+                    // Calculate the slot index corresponding to the target visual offset.
+                    // Use Math.round as snapping might end slightly off the exact slot boundary.
                     const snappedSlotIndex = Math.round(Math.abs(targetVisualOffset) / layout.avatarSlotWidth);
-                    let avatarToHideRawIndex;
 
-                    // Desktop always snaps 'forward' visually
-                    avatarToHideRawIndex = snappedSlotIndex + layout.visibleAvatarsCount;
+                    // The avatar to hide is the one that will become the first fully visible one *after* the snap.
+                    // This corresponds to the snappedSlotIndex plus the number of visible avatars.
+                    const avatarToHideRawIndex = snappedSlotIndex + layout.visibleAvatarsCount;
 
-                    // Wrap index using modulo
+                    // Wrap the index using modulo to handle looping correctly.
                     const hiddenAvatarRenderedIndex = avatarToHideRawIndex % renderedAvatarItems.length;
-                    // Ensure positive index if modulo result is negative (though unlikely here)
+
+                    // Ensure the index is positive (though modulo should handle this if operands are positive).
                     return (hiddenAvatarRenderedIndex + renderedAvatarItems.length) % renderedAvatarItems.length;
                 }
 
 
-                /** Desktop: Handles mouse entering the container. */
+                /** Desktop: Handles mouse entering the container. Starts hover animation. */
                 function startHoverScroll() {
                     if (!isScrollingEnabled || isMobileMode) return; // Only run on desktop when enabled
-                    isHovering = true;
-                    hoverStartTime = performance.now();
 
-                    // Ensure no avatars are hidden when hover starts
+                    isHovering = true;
+                    hoverStartTime = performance.now(); // Record start time for easing
+
+                    // Make all avatars visible when hover starts for smooth transition
                     renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
 
-                    // Stop any potential snapping transition
+                    // Stop any ongoing snap transition immediately
                     scroller.classList.remove(SETTINGS.snappingClass);
                     scroller.removeEventListener('transitionend', onSnapTransitionEnd);
 
-                    // Sync currentScrollPosition with visual state before starting animation
+                    // Sync logical scroll position with the current visual state before starting animation
                     const currentVisualOffset = getCurrentTranslateX(scroller);
                     if (layout.scrollerLoopWidth > 0) {
-                        // Use robust modulo for sync
+                        // Normalize visual offset to positive value within loop width
                         const positiveOffset = (-currentVisualOffset % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
                         currentScrollPosition = positiveOffset;
                     } else {
-                        currentScrollPosition = -currentVisualOffset;
+                        currentScrollPosition = -currentVisualOffset; // Use raw offset if no loop
                     }
 
                     // Start the animation loop if not already running
@@ -736,286 +676,274 @@
                     }
                 }
 
-                /** Initiates the snap-back animation (Desktop only). */
-                function snapScroller(direction) {
-                    // Exit immediately if in mobile mode or not enabled
-                    if (!isScrollingEnabled || isMobileMode) return;
+                /** Desktop: Initiates the snap-back animation on mouse leave. */
+                function snapScroller() {
+                    if (!isScrollingEnabled || isMobileMode) return; // Only run on desktop when enabled
 
                     // Cancel any ongoing hover animation frame
-                    if (animationFrameId && isHovering) {
+                    if (animationFrameId && isHovering) { // Check isHovering in case leave event fires erratically
                         cancelAnimationFrame(animationFrameId);
                         animationFrameId = null;
                     }
 
                     const currentVisualOffset = getCurrentTranslateX(scroller);
-                    const targetVisualOffset = calculateSnapTargetOffset(currentVisualOffset, direction); // direction is 'forward' for desktop
+                    const targetVisualOffset = calculateSnapTargetOffset(currentVisualOffset);
 
-                    // --- Hiding Logic (Desktop Only) ---
-                    if (layout.avatarSlotWidth <= 0) return; // Prevent errors if layout invalid
+                    // --- Hiding Logic for Snap (Desktop Only) ---
+                    if (layout.avatarSlotWidth <= 0) return; // Prevent errors if layout is invalid
 
-                    // Check if already close to target
+                    const hiddenAvatarIndex = determineHiddenAvatarIndex(targetVisualOffset);
+
+                    // Check if already very close to the target (avoids unnecessary transition/flicker)
                     if (Math.abs(currentVisualOffset - targetVisualOffset) < 0.5) {
-                        const finalHiddenIndex = determineHiddenAvatarIndex(targetVisualOffset, direction);
                         renderedAvatarItems.forEach((item, index) => {
-                            item.classList.toggle(SETTINGS.partiallyHiddenClass, index === finalHiddenIndex);
+                            // Ensure final hidden state is correct even if no transition occurs
+                            item.classList.toggle(SETTINGS.partiallyHiddenClass, index === hiddenAvatarIndex);
                         });
+                        // Sync logical position just in case
+                        currentScrollPosition = Math.abs(targetVisualOffset);
                         return; // No transition needed
                     }
 
-                    // Determine which avatar to hide *before* starting the snap
-                    const hiddenAvatarIndex = determineHiddenAvatarIndex(targetVisualOffset, direction);
+                    // Apply the hidden class *before* starting the transition for a smoother effect
                     renderedAvatarItems.forEach((item, index) => {
                         item.classList.toggle(SETTINGS.partiallyHiddenClass, index === hiddenAvatarIndex);
                     });
                     // --- End Hiding Logic ---
 
-
-                    // Add class to enable CSS transition
+                    // Add class to enable CSS transition for snapping
                     scroller.classList.add(SETTINGS.snappingClass);
-                    // Listen for transition end to clean up
+                    // Listen for transition end to clean up classes and state
                     scroller.addEventListener('transitionend', onSnapTransitionEnd, { once: true });
 
-                    // Use rAF to ensure the class is applied before the transform changes
+                    // Use rAF to ensure the style change happens *after* the class is applied
                     requestAnimationFrame(() => {
-                        // Double check: only apply if still snapping and hover hasn't resumed
+                        // Double check: only apply transform if still snapping and hover hasn't immediately resumed
                         const stillSnapping = scroller.classList.contains(SETTINGS.snappingClass);
                         if (stillSnapping && !isHovering) {
                             scroller.style.transform = `translateX(${targetVisualOffset}px)`;
-                            // Update logical scroll position to match the snapped state
+                            // Update logical scroll position to match the snapped visual state
                             if (layout.scrollerLoopWidth > 0) {
-                                // Use robust modulo for update
                                 currentScrollPosition = (-targetVisualOffset % layout.scrollerLoopWidth + layout.scrollerLoopWidth) % layout.scrollerLoopWidth;
                             } else {
                                 currentScrollPosition = -targetVisualOffset;
                             }
                         } else if (isHovering) {
-                            // If hover resumed during this rAF, cancel the snap immediately
+                            // If hover resumed extremely quickly (during this rAF), cancel the snap
                             scroller.classList.remove(SETTINGS.snappingClass);
                             scroller.removeEventListener('transitionend', onSnapTransitionEnd);
-                            // Ensure hidden class is removed if snap cancelled
+                            // Ensure hidden class is removed if snap was cancelled mid-flight
                             renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
                         }
                     });
                 }
 
 
-                /** Desktop: Handles mouse leaving the container. */
+                /** Desktop: Handles mouse leaving the container. Stops hover and starts snap. */
                 function stopHoverScrollAndSnap() {
-                    // Exit immediately if in mobile mode or not enabled
-                    if (!isScrollingEnabled || isMobileMode) return;
+                    if (!isScrollingEnabled || isMobileMode) return; // Only run on desktop when enabled
 
                     isHovering = false;
                     hoverStartTime = null; // Reset hover start time
-                    snapScroller('forward'); // Trigger the desktop snap
+
+                    snapScroller(); // Trigger the snap-back animation
                 }
 
                 // --- Mobile Scroll Interaction ---
 
-                /** Mobile: Handles the window scroll event. */
+                /** Mobile: Handles the window scroll event to drive avatar scrolling. */
                 function handlePageScroll() {
                     if (!isScrollingEnabled || !isMobileMode) return; // Only run on mobile when enabled
 
-                    // Clear any pending scroll stop timeout (if we were using one)
-                    // if (scrollTimeoutId) clearTimeout(scrollTimeoutId); // Still useful if you add logic to handleScrollStop
-
                     const currentScrollY = window.scrollY;
-                    const deltaY = currentScrollY - previousScrollY;
+                    const deltaY = currentScrollY - previousScrollY; // Calculate change in page scroll
 
-                    // --- MODIFICATION: Update scroll position based on scroll direction ---
-                    // deltaY > 0 means scrolling DOWN -> scroll avatars FORWARD (increase position)
-                    // deltaY < 0 means scrolling UP -> scroll avatars BACKWARD (decrease position)
+                    // Update logical scroll position based on page scroll direction and multiplier
+                    // Scrolling DOWN (deltaY > 0) moves avatars FORWARD (increases position)
+                    // Scrolling UP   (deltaY < 0) moves avatars BACKWARD (decreases position)
                     currentScrollPosition += deltaY * SETTINGS.scrollMultiplier;
-                    // --- END MODIFICATION ---
 
-                    // Ensure NO avatars are hidden during mobile scroll
+                    // Ensure NO avatars are hidden during mobile scroll interaction
                     renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
 
-                    scheduleScrollUpdate(); // Update visuals via rAF
+                    scheduleScrollUpdate(); // Schedule visual update via rAF
 
-                    previousScrollY = currentScrollY; // Store current scroll position for next event
-
-                    // Optionally, set a timeout if you need to detect when scrolling stops for other reasons
-                    // scrollTimeoutId = setTimeout(handleScrollStop, SETTINGS.scrollStopDelay);
-                }
-
-                /** Mobile: Called when the scroll stop timeout completes (currently unused for main logic). */
-                function handleScrollStop() {
-                    if (!isScrollingEnabled || !isMobileMode) return;
-                    // scrollTimeoutId = null; // Clear the timeout ID
-
-                    // No snapping on mobile.
-                    // Add any other logic needed when scroll stops here.
+                    previousScrollY = currentScrollY; // Store current scroll position for the next event
                 }
 
 
                 // --- Initialization ---
 
-                /** Sets up the avatar group component. */
+                /** Sets up the avatar group component, calculates layout, populates avatars, and adds event listeners. */
                 function initializeAvatarGroup() {
                     if (!SETTINGS.avatarUrls || SETTINGS.avatarUrls.length === 0) {
-                        console.warn("No avatar URLs provided in SETTINGS.avatarUrls.");
+                        console.warn("No avatar URLs provided in SETTINGS.avatarUrls. Hiding component.");
                         if (countElement) countElement.style.display = 'none';
                         if (container) container.style.display = 'none';
                         return;
                     }
 
-                    // Determine mode based on primary input mechanism
+                    // Determine interaction mode based on primary input mechanism (touch vs mouse)
+                    // This is a decent proxy for mobile vs desktop, but not perfect.
                     isMobileMode = window.matchMedia('(pointer: coarse)').matches;
 
-                    // Use rAF to ensure layout calculations happen after potential CSS changes
+                    // Use rAF to ensure layout calculations happen after any potential CSS reflows/updates
                     requestAnimationFrame(() => {
-                        // Clear previous avatars if re-initializing
+                        // Clear previous state if re-initializing (e.g., on resize)
                         if (scroller) scroller.innerHTML = '';
                         renderedAvatarItems = [];
-                        currentScrollPosition = 0; // Reset position
+                        currentScrollPosition = 0;
+                        isHovering = false;
+                        hoverStartTime = null;
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId);
+                            animationFrameId = null;
+                        }
+                        scroller.classList.remove(SETTINGS.snappingClass); // Remove transition class
+                        scroller.removeEventListener('transitionend', onSnapTransitionEnd); // Remove listener
 
-                        // Read layout CSS variables
+                        // Read layout-related CSS variables with fallbacks
                         layout.avatarSize = getCssVariable('avatar-size', SETTINGS.cssVarDefaults.avatarSize);
                         layout.avatarOverlap = getCssVariable('avatar-overlap', SETTINGS.cssVarDefaults.avatarOverlap);
                         layout.visibleAvatarsCount = getCssVariable('visible-avatars', SETTINGS.cssVarDefaults.visibleAvatars);
                         layout.avatarSlotWidth = layout.avatarSize - layout.avatarOverlap;
 
-                        // Set viewport width dynamically based on calculated values
+                        // Set the viewport width dynamically based on calculated values
                         if (viewport) {
+                            // Calculate width needed to show the specified number of visible avatars perfectly
                             const viewportWidth = layout.avatarSize + (layout.visibleAvatarsCount - 1) * layout.avatarSlotWidth;
+                            // Set both the CSS variable (if used elsewhere) and the direct style
                             viewport.style.setProperty('--viewport-width', `${viewportWidth}px`);
                             viewport.style.width = `${viewportWidth}px`;
                         }
 
+                        // Basic validation: Ensure avatars have a positive effective width
                         if (layout.avatarSlotWidth <= 0) {
-                            console.error("Calculated 'avatarSlotWidth' is zero or negative. Disabling component.");
+                            console.error("Calculated 'avatarSlotWidth' is zero or negative (check --avatar-size and --avatar-overlap). Disabling component.");
                             if (container) container.style.display = 'none';
                             return;
                         }
 
                         const totalUniqueAvatars = SETTINGS.avatarUrls.length;
+                        // Determine if scrolling behavior should be enabled
                         isScrollingEnabled = totalUniqueAvatars >= SETTINGS.minAvatarsForScroll;
 
-                        // Calculate loop width only if scrolling is enabled
-                        if (isScrollingEnabled) {
-                            layout.scrollerLoopWidth = layout.avatarSlotWidth * totalUniqueAvatars;
-                        }
+                        // Calculate the width of one full loop of unique avatars (only if scrolling is enabled)
+                        layout.scrollerLoopWidth = isScrollingEnabled ? layout.avatarSlotWidth * totalUniqueAvatars : 0;
 
-                        // Prepare and render avatars (now handles prepending for negative scroll)
+                        // Prepare the final list of URLs to render (handles duplication/prepending for looping)
                         const urlsToRender = prepareAvatarUrlsForRender(SETTINGS.avatarUrls);
-                        populateAvatars(urlsToRender);
+                        populateAvatars(urlsToRender); // Create and append avatar elements
 
-                        // Verify rendered items (fallback query if needed)
+                        // Verify that avatars were actually added to the DOM
                         if (renderedAvatarItems.length === 0 && urlsToRender.length > 0) {
-                            console.warn("Avatars populated but renderedAvatarItems empty. Re-querying.");
+                            console.warn("Avatars populated but renderedAvatarItems query returned empty. Check selectors/timing.");
+                            // Attempt re-query as a fallback (though populateAvatars should handle this)
                             renderedAvatarItems = scroller.querySelectorAll(SETTINGS.avatarItemSelector);
                         }
 
-                        // --- Initial Offset for Mobile ---
+
+                        // --- Initial Offset and State ---
                         let initialOffset = 0;
+                        // For mobile mode with scrolling enabled, start scrolled forward by one loop width.
+                        // This allows the user to immediately scroll UP (backward) without hitting the start.
                         if (isMobileMode && isScrollingEnabled && layout.scrollerLoopWidth > 0) {
-                            // Start mobile scrolled to the beginning of the 'second' set of unique avatars
-                            // This allows immediate scrolling up (backwards) without seeing a blank space initially.
                             initialOffset = layout.scrollerLoopWidth;
                             currentScrollPosition = initialOffset; // Set logical position
                         }
-                        // Apply initial visual state
+                        // Apply the initial visual state (translateX)
                         if (scroller) scroller.style.transform = `translateX(-${initialOffset}px)`;
                         // --- End Initial Offset ---
 
 
+                        // --- Setup based on whether scrolling is enabled ---
                         if (isScrollingEnabled) {
-                            // Configure count display
+                            // Configure count display visibility and text
                             if (SETTINGS.staticCountText && countElement) {
                                 countElement.textContent = SETTINGS.staticCountText;
-                                countElement.style.display = ''; // Make sure it's visible
+                                countElement.style.display = ''; // Ensure visible
                             } else if (countElement) {
                                 countElement.style.display = 'none'; // Hide if no text provided
                             }
 
-                            // Remove previous listeners before adding new ones (important if re-initializing)
+                            // Clean up any existing listeners before adding new ones (important for re-init)
                             document.removeEventListener('scroll', handlePageScroll);
                             if (container) {
                                 container.removeEventListener('mouseenter', startHoverScroll);
                                 container.removeEventListener('mouseleave', stopHoverScrollAndSnap);
                             }
 
-                            // Initial state and event listeners based on mode
+                            // Add event listeners based on the determined mode (mobile vs desktop)
                             if (isMobileMode) {
-                                // Mobile setup: scroll-driven, no initial hiding, no hover events
+                                // Mobile: Listen for page scroll
                                 previousScrollY = window.scrollY; // Initialize scroll position tracking
                                 document.addEventListener('scroll', handlePageScroll, { passive: true });
-                                // Ensure NO avatars are hidden initially/during scroll on mobile
+                                // Ensure NO avatars are hidden initially on mobile
                                 renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
-
                             } else {
-                                // Desktop setup: hover-driven, initial hide, add hover listeners
+                                // Desktop: Listen for mouse hover events
                                 if (container) {
                                     container.addEventListener('mouseenter', startHoverScroll);
                                     container.addEventListener('mouseleave', stopHoverScrollAndSnap);
                                 }
-
-                                // Desktop: Hide the avatar just outside the viewport initially
+                                // Desktop: Initially hide the avatar that's just outside the viewport on the right.
                                 if (layout.avatarSlotWidth > 0) { // Check layout validity
-                                    // Calculate index based on potentially offset start position if mobile init happened
-                                    const currentVisualOffset = getCurrentTranslateX(scroller);
-                                    const effectiveSlotIndex = Math.round(Math.abs(currentVisualOffset) / layout.avatarSlotWidth);
-                                    const initialHiddenIndex = (effectiveSlotIndex + layout.visibleAvatarsCount) % renderedAvatarItems.length;
+                                    // Calculate index based on the initial visual offset
+                                    const initialHiddenIndex = determineHiddenAvatarIndex(-initialOffset);
 
-                                    if (renderedAvatarItems.length > initialHiddenIndex && renderedAvatarItems[initialHiddenIndex]) {
-                                        // Ensure others are visible first
+                                    if (renderedAvatarItems.length > initialHiddenIndex && initialHiddenIndex >= 0 && renderedAvatarItems[initialHiddenIndex]) {
+                                        // Apply hidden class only to the calculated avatar
                                         renderedAvatarItems.forEach((item, index) => {
                                             item.classList.toggle(SETTINGS.partiallyHiddenClass, index === initialHiddenIndex);
                                         });
                                     } else if (renderedAvatarItems.length <= layout.visibleAvatarsCount) {
-                                        // If not enough avatars to hide one, ensure count is also hidden
+                                        // If there aren't enough avatars to actually hide one, hide the count as well.
                                         if (countElement) countElement.style.display = 'none';
-                                        // console.warn("Fewer rendered avatars than visible slots + 1. Hiding count."); // Less noisy console
                                     }
                                 }
                             }
 
                         } else {
-                            // Scrolling disabled (not enough avatars):
-                            // Hide count, adjust width, remove listeners
+                            // Scrolling Disabled (not enough unique avatars):
+                            // Hide count, adjust viewport width to fit available avatars, remove listeners.
                             if (countElement) countElement.style.display = 'none';
+
+                            // Calculate width needed for the available avatars (up to visible count)
                             const nonScrollingAvatarCount = Math.min(totalUniqueAvatars, layout.visibleAvatarsCount);
                             const nonScrollingWidth = layout.avatarSize + Math.max(0, nonScrollingAvatarCount - 1) * layout.avatarSlotWidth;
                             if (viewport) viewport.style.width = `${nonScrollingWidth}px`;
+
                             // Ensure no avatars are hidden if scrolling is off
                             renderedAvatarItems.forEach(item => item.classList.remove(SETTINGS.partiallyHiddenClass));
+
                             // Remove listeners if scrolling becomes disabled
                             document.removeEventListener('scroll', handlePageScroll);
                             if (container) {
                                 container.removeEventListener('mouseenter', startHoverScroll);
                                 container.removeEventListener('mouseleave', stopHoverScrollAndSnap);
                             }
+                            // Ensure scroller is at the start position
+                            if (scroller) scroller.style.transform = 'translateX(0px)';
+                            currentScrollPosition = 0;
                         }
 
-                        // Reset visual state only if NOT setting initial mobile offset
-                        // if (!isMobileMode || !isScrollingEnabled) {
-                        // if (scroller) scroller.style.transform = 'translateX(0px)';
-                        // currentScrollPosition = 0; // Reset logical position
-                        // }
-                        // --> Handled by the initialOffset logic now.
-
-                    }); // End requestAnimationFrame
+                    }); // End requestAnimationFrame for initialization
                 }
 
-                // --- Run Initialization ---
-                // Initialize on DOM ready
+                // --- Run Initialization & Setup Resize Listener ---
+
+                // Initialize the component when the DOM is ready
                 document.addEventListener('DOMContentLoaded', initializeAvatarGroup);
 
-                // Optional: Add a debounced resize listener if layouts change significantly
+                // Add a debounced resize listener to re-initialize the component if the interaction mode changes
+                // or if layout needs recalculation (e.g., CSS variables change via media queries).
                 let resizeTimeout;
                 window.addEventListener('resize', () => {
                     clearTimeout(resizeTimeout);
                     resizeTimeout = setTimeout(() => {
-                        // Re-check mode and re-initialize fully
-                        const newMode = window.matchMedia('(pointer: coarse)').matches;
-                        if (newMode !== isMobileMode || !isScrollingEnabled) { // Re-init if mode changes or was disabled
-                            initializeAvatarGroup();
-                        } else {
-                            // If mode is the same and enabled, just update layout vars? Less disruptive.
-                            // For simplicity, full re-init handles most cases.
-                            initializeAvatarGroup();
-                        }
-                    }, 250); // Debounce time
+                        // Re-run the full initialization to adapt to new screen size / mode / CSS variables
+                        initializeAvatarGroup();
+                    }, 250); // Debounce delay in milliseconds
                 });
 
             })(); // End of IIFE
